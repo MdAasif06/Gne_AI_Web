@@ -1,5 +1,5 @@
 import { Router } from "express";
-import registerUser from "../controllers/auth.controller.js";
+import authController from "../controllers/auth.controller.js";
 const authRouter = Router();
 
 
@@ -9,8 +9,13 @@ const authRouter = Router();
  * @access Public
  */
 
-authRouter.post("/register",registerUser.registerUser)
-authRouter.post("/login",registerUser.userLogin)
+authRouter.post("/register",authController.registerUser)
+authRouter.post("/login",authController.userLogin)
 
-
+/**
+ * @route GET /api/auth/logout  
+ * @description clear token from user cookie and add the token in blacklist
+ * @access Public
+ */
+authRouter.get("/logout",authController.logoutUser)
 export default authRouter;

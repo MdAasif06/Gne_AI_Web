@@ -1,6 +1,9 @@
 import userModel from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import tokenBlackListModel from "../models/blackList.model.js";
+
+
 /**
  * @route POST /api/auth/register
  * @description Register new user
@@ -77,7 +80,7 @@ const userLogin = async (req, res) => {
     const token = jwt.sign(
       { id: user._id, username: user.username },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
 
     res.cookie("token", token);
@@ -95,4 +98,20 @@ const userLogin = async (req, res) => {
   }
 };
 
-export default { registerUser, userLogin };
+/**
+ * @route GET /api/auth/logout
+ * @description clear token from user cookie and add the token in blacklist
+ * @access Public
+ */
+
+const logoutUser = async (req, res) => {
+  const token = req.cookies.token;
+  if (token) {
+    await tokenBlackListModel.create({ token });
+  }
+  res.status(200).json({
+    message: "user loggout successfully",
+  });
+};
+
+export default { registerUser, userLogin ,logoutUser};
