@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import tokenBlackListModel from "../models/blackList.model.js";
 
-
 /**
  * @route POST /api/auth/register
  * @description Register new user
@@ -48,6 +47,10 @@ const registerUser = async (req, res) => {
     });
   } catch (error) {
     console.log("error while register user", error);
+    res.status(500).json({
+      message: "Internal server error",
+      error: error.message,
+    });
   }
 };
 
@@ -95,6 +98,10 @@ const userLogin = async (req, res) => {
     });
   } catch (error) {
     console.log("Error while login user", error);
+    res.status(500).json({
+      message: "Internal server error",
+      error: error.message,
+    });
   }
 };
 
@@ -105,13 +112,47 @@ const userLogin = async (req, res) => {
  */
 
 const logoutUser = async (req, res) => {
-  const token = req.cookies.token;
-  if (token) {
-    await tokenBlackListModel.create({ token });
+  try {
+    const token = req.cookies.token;
+
+    if (token) {
+      await tokenBlackListModel.create({ token });
+    }
+
+    // remove cookie
+    res.clearCookie("token");
+
+    res.status(200).json({
+      message: "User logout successfully",
+    });
+
+  } catch (error) {
+    console.error("Error while logout:", error);
+
+    res.status(500).json({
+      message: "Internal server error",
+    });
   }
-  res.status(200).json({
-    message: "user loggout successfully",
-  });
 };
 
-export default { registerUser, userLogin ,logoutUser};
+const getMeController = async (req, res) => {
+  try {
+    const user = await userModel.findById(req.user.id);
+    res.status(200).json({
+      message: "user details fetch successfully",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    console.error("Error while fetching user details:", error);
+    res.status(500).json({
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+
+export default { registerUser, userLogin, logoutUser, getMeController };
