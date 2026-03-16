@@ -2,6 +2,8 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.route.js";
 import cors from "cors"
+import interviewRouter from "./routes/interview.route.js";
+
 const app = express();
 
 // IMPORTANT middleware
@@ -14,6 +16,7 @@ app.use(cors({
 }))
 // ruquire all routes here
 app.use("/api/auth",authRouter)
+app.use("/api/interview",interviewRouter)
 
 
 

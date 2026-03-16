@@ -41,14 +41,14 @@ const interviewReportSchema = z.object({
   title: z.string(),
 });
 
-async function generateInterviewReport({ resume, selfDecration, jobDescription }) {
+async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
   
   const prompt = `
 Generate an interview preparation report.
 
 Resume: ${resume}
 
-Self Description: ${selfDecration}
+Self Description: ${selfDescription}
 
 Job Description: ${jobDescription}
 
@@ -83,23 +83,24 @@ Return ONLY JSON with this structure:
 
   const text = response.choices[0].message.content;
 
-  console.log("RAW RESPONSE:", text);
+  // console.log("RAW RESPONSE:", text);
 
   const cleaned = text.replace(/```json|```/g, "");
 
-  const parsed = JSON.parse(cleaned);
+  return JSON.parse(cleaned);
+  // const parsed = cleaned;
 
-  const validated = interviewReportSchema.safeParse(parsed);
+  // const validated = interviewReportSchema.safeParse(parsed);
 
-  if (!validated.success) {
-    console.log("Schema mismatch");
-    console.log(validated.error.format());
-    return parsed;
-  }
+  // if (!validated.success) {
+  //   console.log("Schema mismatch");
+  //   console.log(validated.error.format());
+  //   return parsed;
+  // }
 
-  console.log(validated.data);
+  // console.log(validated.data);
 
-  return validated.data;
+  // return validated.data;
 }
 
 export default generateInterviewReport;
