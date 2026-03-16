@@ -122,7 +122,7 @@ const interviewReportSchema = new mongoose.Schema(
     },
     technicalQuestions: [technicalQuestionSchema],
     behavioralQuestions: [behavioralQuestionSchema],
-    skillGap: [skillGapSchema],
+    skillGaps: [skillGapSchema],
     preparationPlan: [preparationPlanSchema],
     user:{
       type:mongoose.Schema.Types.ObjectId,

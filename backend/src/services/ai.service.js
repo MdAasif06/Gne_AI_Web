@@ -83,7 +83,7 @@ Return ONLY JSON with this structure:
 
   const text = response.choices[0].message.content;
 
-  // console.log("RAW RESPONSE:", text);
+  console.log("RAW RESPONSE:", text);
 
   const cleaned = text.replace(/```json|```/g, "");
 
